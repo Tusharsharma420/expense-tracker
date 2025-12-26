@@ -1,0 +1,35 @@
+/* Family List */
+.family-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.family-item {
+    background: var(--surface);
+    padding: 16px;
+    border-radius: var(--radius-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.family-info h4 {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.family-stats {
+    text-align: right;
+    font-size: 0.85rem;
+}
+
+.family-stats .inc {
+    color: var(--success);
+    display: block;
+}
+
+.family-stats .exp {
+    color: var(--danger);
+}

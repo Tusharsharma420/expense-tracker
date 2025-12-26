@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SHARMA</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6c5ce7">
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</head>
+
+<body>
+
+    <!-- APP CONTAINER -->
+    <div id="app">
+
+        <!-- HEADER -->
+        <header class="app-header">
+            <div class="logo">
+                <span class="material-symbols-rounded icon">account_balance_wallet</span>
+                <h1>SHARMA</h1>
+            </div>
+            <div class="header-actions" style="display:flex; gap:16px; align-items:center;">
+                <div class="status-indicator online" id="syncStatus">
+                    <span class="dot"></span>
+                </div>
+                <div onclick="router.navigate('profile')"
+                    style="cursor:pointer; width:32px; height:32px; border-radius:50%; overflow:hidden; background:var(--surface-2); display:flex; align-items:center; justify-content:center;">
+                    <img id="headerAvatar" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
+                    <span id="headerInitials" class="material-symbols-rounded"
+                        style="font-size:1.2rem; color:var(--text-muted);">account_circle</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN VIEW AREA -->
+        <main id="mainView">
+            <!-- Views will be injected here -->
+        </main>
+
+        <!-- BOTTOM NAVIGATION -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="router.navigate('dashboard')">
+                <span class="material-symbols-rounded">dashboard</span>
+                <span>Home</span>
+            </button>
+            <button class="nav-item fab-wrapper" onclick="router.navigate('add')">
+                <div class="fab">
+                    <span class="material-symbols-rounded">add</span>
+                </div>
+            </button>
+            <button class="nav-item" onclick="router.navigate('analytics')">
+                <span class="material-symbols-rounded">bar_chart</span>
+                <span>Stats</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- TEMPLATES -->
+
+    <!-- TEMPLATE: DASHBOARD -->
+    <template id="tpl-dashboard">
+        <div class="view-dashboard">
+
+
+            <div class="balance-card">
+                <div class="balance-header">
+                    <span class="label">Total Balance</span>
+                    <h2 class="amount" id="totalBalance">₹ 0</h2>
+                </div>
+                <div class="balance-row">
+                    <div class="balance-item income">
+                        <span class="material-symbols-rounded">arrow_downward</span>
+                        <div>
+                            <span class="lbl">Income</span>
+                            <span class="val" id="totalIncome">₹ 0</span>
+                        </div>
+                    </div>
+                    <div class="balance-item expense">
+                        <span class="material-symbols-rounded">arrow_upward</span>
+                        <div>
+                            <span class="lbl">Expense</span>
+                            <span class="val" id="totalExpense">₹ 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Family Summary -->
+            <div class="section-header" style="margin-top:24px;">
+                <h3>Family Summary (Month)</h3>
+            </div>
+            <div id="familySummary" class="family-list">
+                <!-- Injected by JS -->
+            </div>
+
+            <div class="section-header">
+                <h3>Recent Activity</h3>
+                <button class="btn-text" onclick="router.navigate('history')">See All</button>
+            </div>
+
+            <div class="transaction-list" id="recentTransactions">
+                <!-- Transaction Items -->
+            </div>
+        </div>
+    </template>
+
+    <!-- TEMPLATE: ADD TRANSACTION -->
+    <template id="tpl-add">
+        <div class="view-add">
+            <h2>Add Transaction</h2>
+            <form id="addForm" onsubmit="app.handleSubmit(event)">
+                <!-- Type Toggle -->
+                <div class="type-toggle">
+                    <input type="radio" name="txnType" id="type-expense" value="expense" checked
+                        onchange="app.toggleType('expense')">
+                    <label for="type-expense">Expense</label>
+
+                    <input type="radio" name="txnType" id="type-income" value="income"
+                        onchange="app.toggleType('income')">
+                    <label for="type-income">Income</label>
+                </div>
+
+                <div style="position:absolute; top:24px; right:20px;">
+                    <button type="button" onclick="app.startVoiceInput()"
+                        style="background:rgba(var(--primary-rgb), 0.1); border:none; color:var(--primary); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                        <span class="material-symbols-rounded">mic</span>
+                    </button>
+                </div>
+
+                <!-- Distribution Prompt (Visible only in Income) -->
+                <div id="distributePrompt" style="display:none; text-align:center; margin-bottom:20px;">
+                    <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:8px;">Adding for everyone?</p>
+                    <button type="button" class="btn-secondary" onclick="router.navigate('distribute')"
+                        style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px;">
+                        <span class="material-symbols-rounded">call_split</span>
+                        Distribute Income
+                    </button>
+                </div>
+
+                <div class="form-group amount-group">
+                    <span class="currency">₹</span>
+                    <input type="number" id="inpAmount" placeholder="0" required inputmode="numeric" autofocus>
+                </div>
+
+                <!-- Person is now auto-handled by Profile -->
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <div class="chip-group" id="categoryChips">
+                        <!-- Filled by JS -->
+                    </div>
+                    <input type="hidden" id="inpCategory" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Note</label>
+                    <input type="text" id="inpNote" placeholder="What was this for?">
+                </div>
+
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="inpDate" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="router.back()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </template>
+
+    <!-- TEMPLATE: EDIT TRANSACTION -->
+    <template id="tpl-edit">
+        <div class="view-add">
+            <div class="header-actions"
+                style="margin-bottom:24px; display:flex; align-items:center; justify-content:space-between;">
+                <button class="btn-text" onclick="router.back()" style="padding-left:0;">
+                    <span class="material-symbols-rounded">arrow_back</span> Back
+                </button>
+                <button class="btn-icon-danger" onclick="app.deleteTransaction()"
+                    style="background:rgba(255,118,117,0.1); color:var(--danger); border:none; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                    <span class="material-symbols-rounded">delete</span>
+                </button>
+            </div>
+
+            <h2 style="margin-bottom:24px;">Edit Transaction</h2>
+
+            <form id="editForm" onsubmit="app.handleEdit(event)">
+                <input type="hidden" id="inpEditId">
+                <!-- Type Toggle -->
+                <div class="type-toggle">
+                    <input type="radio" name="editTxnType" id="edit-type-expense" value="expense"
+                        onchange="app.toggleEditType('expense')">
+                    <label for="edit-type-expense">Expense</label>
+
+                    <input type="radio" name="editTxnType" id="edit-type-income" value="income"
+                        onchange="app.toggleEditType('income')">
+                    <label for="edit-type-income">Income</label>
+                </div>
+
+                <div class="form-group amount-group">
+                    <span class="currency">₹</span>
+                    <input type="number" id="inpEditAmount" placeholder="0" required inputmode="numeric">
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <div class="chip-group" id="editCategoryChips">
+                        <!-- Filled by JS -->
+                    </div>
+                    <input type="hidden" id="inpEditCategory" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Note</label>
+                    <input type="text" id="inpEditNote" placeholder="What was this for?">
+                </div>
+
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="inpEditDate" required>
+                </div>
+
+                <div class="form-actions" style="margin-top:32px;">
+                    <button type="submit" class="btn-primary"
+                        style="width:100%; padding:16px; font-size:1.1rem; box-shadow:0 4px 12px var(--shadow);">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </template>
+
+    <!-- TEMPLATE: ANALYTICS -->
+    <template id="tpl-analytics">
+        <div class="view-analytics">
+            <h2>Analytics</h2>
+
+            <!-- View Toggle -->
+            <div class="type-toggle" style="margin-bottom:20px;">
+                <input type="radio" name="chartView" id="view-cat" value="category" checked
+                    onchange="app.renderAnalytics()">
+                <label for="view-cat">Category</label>
+
+                <input type="radio" name="chartView" id="view-person" value="person" onchange="app.renderAnalytics()">
+                <label for="view-person">Person</label>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="categoryChart"></canvas>
+            </div>
+            <div class="stats-list" id="categoryStats">
+                <!-- Stats rows -->
+            </div>
+        </div>
+    </template>
+
+    <!-- TEMPLATE: CONFIG -->
+    <template id="tpl-config">
+        <div class="view-config">
+            <div class="onboarding-header">
+                <h2>Welcome</h2>
+                <p>Create your profile to get started</p>
+            </div>
+
+            <form id="configForm" onsubmit="app.saveConfig(event)">
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="inpUserName" placeholder="e.g. Tushar" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Home Group ID</label>
+                    <input type="text" id="inpFamilyId" placeholder="e.g. FAM001" required>
+                    <small>Share this ID with your family to track together.</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Database URL (API)</label>
+                    <input type="url" id="inpApiUrl" placeholder="https://script.google.com/..." required>
+                </div>
+
+                <button type="submit" class="btn-primary">Join Group</button>
+            </form>
+        </div>
+    </template>
+
+    <!-- TEMPLATE: PROFILE -->
+    <template id="tpl-profile">
+        <div class="view-profile">
+            <h2>Your Profile</h2>
+            <form onsubmit="app.saveConfig(event)"> <!-- Reusing saveConfig -->
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="inpUserName" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Home Group ID</label>
+                    <input type="text" id="inpFamilyId" required>
+                    <small>Changing this will switch your data source.</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Database URL</label>
+                    <input type="url" id="inpApiUrl" required>
+                </div>
+
+                <button type="submit" class="btn-primary">Update Profile</button>
+            </form>
+
+
+
+            <!-- Custom Categories -->
+            <div class="section-header" style="margin-top:24px;">
+                <h3>Custom Categories</h3>
+                <small style="color:var(--text-muted)">Manage your custom tags</small>
+            </div>
+            <div id="customCategoriesList" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px;">
+                <!-- Injected by JS -->
+            </div>
+
+            <div style="margin-top:24px; text-align:center;">
+                <p style="color:var(--text-muted); font-size:0.8rem;">App Version 1.3</p>
+            </div>
+
+            <!-- Hidden Input for Contact Photos -->
+            <input type="file" id="inpContactAvatar" accept="image/*" style="display:none"
+                onchange="app.handleContactAvatarChange(event)">
+        </div>
+    </template>
+
+    <!-- TEMPLATE: PERSON DETAIL -->
+    <template id="tpl-person">
+        <div class="view-person">
+            <div class="header-actions" style="margin-bottom:24px;">
+                <button class="btn-text" onclick="router.navigate('dashboard')" style="padding-left:0;">
+                    <span class="material-symbols-rounded">arrow_back</span> Back
+                </button>
+            </div>
+
+            <div style="text-align:center; margin-bottom:32px;">
+                <div id="personAvatar"
+                    style="width:100px; height:100px; border-radius:50%; margin:0 auto 16px; overflow:hidden; background:var(--surface-2); display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-lg);">
+                    <!-- Injected -->
+                </div>
+                <h2 id="personName">Name</h2>
+                <p id="personRole" style="color:var(--text-muted); font-size:0.9rem;"></p>
+            </div>
+
+            <div class="balance-card" style="margin-bottom:24px;">
+                <div class="balance-row">
+                    <div class="balance-item income">
+                        <span class="material-symbols-rounded">arrow_downward</span>
+                        <div>
+                            <span class="lbl">Total Income</span>
+                            <span class="val" id="personIncome">₹ 0</span>
+                        </div>
+                    </div>
+                    <div class="balance-item expense">
+                        <span class="material-symbols-rounded">arrow_upward</span>
+                        <div>
+                            <span class="lbl">Total Expense</span>
+                            <span class="val" id="personExpense">₹ 0</span>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    style="text-align:center; margin-top:16px; border-top:1px solid rgba(255,255,255,0.1); padding-top:12px;">
+                    <span style="color:var(--text-muted); font-size:0.8rem;">Contribution</span>
+                    <div id="personBalance" style="font-size:1.1rem; font-weight:600;">₹ 0</div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h3>Activity</h3>
+            </div>
+
+            <div class="transaction-list" id="personTransactions">
+                <!-- Injected -->
+            </div>
+        </div>
+    </template>
+
+    <!-- TEMPLATE: DISTRIBUTE -->
+    <template id="tpl-distribute">
+        <div class="view-distribute">
+            <h2>Distribute Income</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Total Income Amount</p>
+
+            <form onsubmit="app.handleDistribute(event)">
+                <div class="form-group amount-group">
+                    <span class="currency" style="color:var(--success)">₹</span>
+                    <input type="number" id="inpTotalIncome" placeholder="0" required inputmode="numeric"
+                        oninput="app.calcDistribute()" autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="inpDistNote" placeholder="e.g. Salary, Bonus">
+                </div>
+
+                <div class="section-header">
+                    <h3>Allocations</h3>
+                    <button type="button" class="btn-text" onclick="app.addDistributeRow()">+ Person</button>
+                </div>
+
+                <div id="distributeList" style="display:flex; flex-direction:column; gap:12px; margin-bottom:24px;">
+                    <!-- Rows injected by JS -->
+                </div>
+
+                <div
+                    style="background:var(--surface); padding:16px; border-radius:var(--radius-md); margin-bottom:24px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span style="color:var(--text-muted)">Remaining for You</span>
+                        <span id="distRemaining" style="font-weight:600">₹ 0</span>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="router.back()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save All</button>
+                </div>
+            </form>
+        </div>
+    </template>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
