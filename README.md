@@ -1,31 +1,67 @@
-# Backend Setup Instructions
+<h1 align="center">
+  <br>
+  💰 Expense Tracker
+  <br>
+</h1>
 
-1.  **Create a Google Sheet**
-    *   Go to [sheets.new](https://sheets.new)
-    *   Name it "Expense Tracker DB"
+<h4 align="center">A high-performance, interactive expense tracking application inspired by Robinhood.</h4>
 
-2.  **Open Apps Script**
-    *   In the Sheet, go to `Extensions` > `Apps Script`.
-    *   Delete any code in the editor.
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#tech-stack">Tech Stack</a> •
+  <a href="#getting-started">Getting Started</a> •
+  <a href="#contributing">Contributing</a>
+</p>
 
-3.  **Paste Code**
-    *   Copy the content of [Code.js](./Code.js) and paste it into the script editor.
-    *   Save the project (Cmd/Ctrl + S).
+<p align="center">
+  <img src="https://img.shields.io/badge/version-1.0.0-blue.svg" alt="Version">
+  <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License">
+  <img src="https://img.shields.io/github/actions/workflow/status/Tusharsharma420/expense-tracker/ci.yml?branch=main" alt="Build Status">
+</p>
 
-4.  **Initial Setup**
-    *   In the toolbar, select `setupSheets` from the function dropdown.
-    *   Click **Run**.
-    *   Review permissions (Click "Review permissions", choose your account, click "Advanced" > "Go to ... (unsafe)", then "Allow").
-    *   *Verify*: Go back to your Sheet, you should see "Transactions", "Families", and "Persons" tabs.
+---
 
-5.  **Deploy as Web App**
-    *   Click `Deploy` (top right) > `New deployment`.
-    *   Select type: `Web app`.
-    *   Description: "v1".
-    *   **Execute as**: `Me` (your email).
-    *   **Who has access**: `Anyone` (Important for the Android app to access it without complex OAuth flows for this MVP).
-    *   Click `Deploy`.
+## 🚀 Features
 
-6.  **Get URL**
-    *   Copy the `Web App URL` (starts with `https://script.google.com/macros/s/...`).
-    *   **Paste this URL** into `app/app.js` (we will create this shortly) as the `API_URL`.
+- **Interactive UI/UX**: Robinhood-inspired design for maximum engagement.
+- **Real-Time Analytics**: Visual breakdown of your daily, weekly, and monthly expenses.
+- **Lightning Fast**: Built for speed to minimize friction when logging expenses.
+- **Responsive Design**: Works perfectly on Desktop, Tablet, and Mobile.
+
+## 🛠 Tech Stack
+
+- **Frontend**: React.js, TailwindCSS
+- **Backend/DB**: Firebase / Firestore
+- **Deployment**: Vercel
+
+## 🏁 Getting Started
+
+### Prerequisites
+- Node.js (v16+)
+- npm or yarn
+
+### Installation
+
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/Tusharsharma420/expense-tracker.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd expense-tracker
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+## 🤝 Contributing
+Contributions, issues, and feature requests are welcome!
+Feel free to check [issues page](https://github.com/Tusharsharma420/expense-tracker/issues).
+
+## 📝 License
+This project is [MIT](https://opensource.org/licenses/MIT) licensed.
