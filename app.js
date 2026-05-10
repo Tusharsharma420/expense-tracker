@@ -407,7 +407,6 @@ const router = {
                     document.getElementById('inpCategory').value = cat.id;
                 };
                 chipContainer.appendChild(chip);
-                chipContainer.appendChild(chip);
             });
 
             // Add Custom Button
@@ -462,7 +461,6 @@ const router = {
             // Pre-fill
             document.getElementById('inpUserName').value = app.state.config.userName;
             document.getElementById('inpFamilyId').value = app.state.config.familyId;
-            document.getElementById('inpApiUrl').value = app.state.config.apiUrl;
             document.getElementById('inpApiUrl').value = app.state.config.apiUrl;
             if (document.getElementById('inpUserRole')) document.getElementById('inpUserRole').value = app.state.config.userRole || '';
             if (document.getElementById('inpUserContact')) document.getElementById('inpUserContact').value = app.state.config.userContact || '';
