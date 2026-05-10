@@ -16,8 +16,8 @@
 </p>
 
 <p align="center">
-  <strong>Shareable user link after publishing:</strong><br>
-  <code>https://&lt;your-github-username&gt;.github.io/expense-tracker/</code>
+  <strong>Web app link after GitHub Pages is deployed:</strong><br>
+  <a href="https://tusharsharma420.github.io/expense-tracker/">https://tusharsharma420.github.io/expense-tracker/</a>
 </p>
 
 ---
@@ -49,13 +49,13 @@ This project is ready to publish as a static GitHub Pages site.
 
 ### User-facing app link
 
-After GitHub Pages is enabled, share this URL with users:
+After GitHub Pages is enabled and the deployment finishes successfully, share this web app link with users so they can open the application in any modern browser:
 
-```text
-https://<your-github-username>.github.io/expense-tracker/
-```
+[Open Family Expense Tracker on the web](https://tusharsharma420.github.io/expense-tracker/)
 
-Replace `<your-github-username>` with the GitHub account or organization that owns the repository. If you rename the repository, replace `expense-tracker` with the new repository name. If you configure a custom domain in GitHub Pages, share that custom domain instead.
+> **Seeing a GitHub Pages 404?** That means the site has not been published yet, the Pages deployment has not completed, or Pages is not enabled for this repository. Complete the setup below and wait for the workflow to finish before sharing the link.
+
+This repository is intended to publish from the `tusharsharma420` GitHub account. If you move this repository, rename it, or configure a custom domain in GitHub Pages, update this link before sharing it.
 
 ### Recommended GitHub Pages setup
 
@@ -63,7 +63,7 @@ Replace `<your-github-username>` with the GitHub account or organization that ow
 2. Go to **Settings → Pages**.
 3. Under **Build and deployment**, choose **GitHub Actions**.
 4. Push to the `main` branch or run the **Deploy static app to GitHub Pages** workflow manually from the **Actions** tab.
-5. After the workflow finishes, open the Pages URL shown in the deployment summary.
+5. After the workflow finishes, open the Pages URL shown in the deployment summary. It should match `https://tusharsharma420.github.io/expense-tracker/` for this repository.
 
 The workflow in `.github/workflows/pages.yml` validates required static assets and deploys the repository contents without a build step.
 
@@ -82,7 +82,7 @@ For the best PWA experience, serve the app over HTTPS. Localhost is also treated
 
 ## For Users
 
-1. **Open the hosted app URL** shared by the app owner or maintainer. For the default GitHub Pages setup, it will look like `https://<your-github-username>.github.io/expense-tracker/`.
+1. **Open the hosted web app** shared by the app owner or maintainer after they confirm GitHub Pages has deployed: [Family Expense Tracker web app](https://tusharsharma420.github.io/expense-tracker/). If GitHub shows a 404 page, ask the maintainer to finish the GitHub Pages setup first.
 2. **Install the app from your browser**:
    - On iPhone/iPad: open the Share menu and choose **Add to Home Screen**.
    - On Android/Chrome: tap the browser menu and choose **Install app** or **Add to Home screen**.
