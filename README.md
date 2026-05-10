@@ -16,8 +16,8 @@
 </p>
 
 <p align="center">
-  <strong>Shareable user link after publishing:</strong><br>
-  <code>https://&lt;your-github-username&gt;.github.io/expense-tracker/</code>
+  <strong>Use the web app after publishing:</strong><br>
+  <a href="https://YOUR-GITHUB-USERNAME.github.io/expense-tracker/">https://YOUR-GITHUB-USERNAME.github.io/expense-tracker/</a>
 </p>
 
 ---
@@ -49,13 +49,11 @@ This project is ready to publish as a static GitHub Pages site.
 
 ### User-facing app link
 
-After GitHub Pages is enabled, share this URL with users:
+After GitHub Pages is enabled, share this web app link with users so they can open the application in any modern browser:
 
-```text
-https://<your-github-username>.github.io/expense-tracker/
-```
+[Open Family Expense Tracker on the web](https://YOUR-GITHUB-USERNAME.github.io/expense-tracker/)
 
-Replace `<your-github-username>` with the GitHub account or organization that owns the repository. If you rename the repository, replace `expense-tracker` with the new repository name. If you configure a custom domain in GitHub Pages, share that custom domain instead.
+Replace `YOUR-GITHUB-USERNAME` with the GitHub account or organization that owns the repository. If you rename the repository, replace `expense-tracker` with the new repository name. If you configure a custom domain in GitHub Pages, share that custom domain instead.
 
 ### Recommended GitHub Pages setup
 
@@ -82,7 +80,7 @@ For the best PWA experience, serve the app over HTTPS. Localhost is also treated
 
 ## For Users
 
-1. **Open the hosted app URL** shared by the app owner or maintainer. For the default GitHub Pages setup, it will look like `https://<your-github-username>.github.io/expense-tracker/`.
+1. **Open the hosted web app** shared by the app owner or maintainer: [Family Expense Tracker web app](https://YOUR-GITHUB-USERNAME.github.io/expense-tracker/). For the default GitHub Pages setup, replace `YOUR-GITHUB-USERNAME` with the GitHub account or organization that owns this repository.
 2. **Install the app from your browser**:
    - On iPhone/iPad: open the Share menu and choose **Add to Home Screen**.
    - On Android/Chrome: tap the browser menu and choose **Install app** or **Add to Home screen**.
